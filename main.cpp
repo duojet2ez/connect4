@@ -16,50 +16,52 @@ class Game{
         Player currentPLayer; //track player turn
     public:
     void playGame(){
-        //game loop
-        //initialize game here
-        int i = 0; 
-        while(true){
-        }
+        
     }
     //function to toggle between players
-    
+
 };
 
 
 class Board{
     private:
+        const int row = 6;
+        const int column = 7; 
         enum class Color{
-            red,
-            yellow,
-            empty
+            red = 'R',
+            yellow = 'Y',
+            empty = '#'
         };
-        vector<vector<Color>> board(7, vector<Color>(6, Color::empty)); 
         Color playerToColor(Player player){
             //possibly use a switch statment here 
-
         }
     public:
+        Board(){
+            vector<vector<Color>>(7, vector<Color>(6, Color::empty));
+        }
     //set new board
-    void reset(){
+        void reset(){
 
-    }
-    void print(){
+        }
         //display board
-    }
-    void dropPiece(int column, Player player){ //player turn can be an enum
-        //need to figure out which player is going 
-        //find lowest cell and set 
-        playerToColor(); 
-        
+        void print(){
+            for(int i = 0; i < row; i++){
+                for(int j = 0; j < column; j++){
+                    cout << static_cast<char>(Color::empty) << " "; 
+                }
+                cout << '\n';
+            }
 
-    }
+        }
+        void dropPiece(int column, Player player){ //player turn can be an enum
+            //need to figure out which player is going 
+            //find lowest cell and set 
+        // playerToColor(); 
+        }
 
-    bool checkWin(){
+        bool checkWin(){
 
-    }
-
-
+        }
 };
 
 //maybe a rewind after all is done
