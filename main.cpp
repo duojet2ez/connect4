@@ -32,7 +32,8 @@ class Board{
                     if(i == 0) return -1; //all rows filled
                     return i -1; 
                 }
-            }    
+            }
+            return -1;     
         }
         //display board
         void print(){
