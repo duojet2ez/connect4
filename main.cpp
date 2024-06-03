@@ -13,6 +13,7 @@ enum class Color{
     empty
 };
 
+bool playerMustSelectAnotherColumn = false; 
 class Board{
     private:
         const int row = 6;
@@ -22,14 +23,16 @@ class Board{
         Board(){
             board = vector<vector<Color>>(row, vector<Color>(column, Color::empty));
         }
-        //set new board
-        void reset(){
-
-        }
         //function that returns the row # of the cell to change, return -1 if not valid column full 
         int cellToChange(int column){
             //move row by row down column until hit a filled cell return up 1 row if not out of bounds 
-            
+            for(int i = 0; i < row; i++){
+                if(i == row - 1 && board[i][column] == Color::empty) return i; 
+                if(board[i][column] == Color::red || board[i][column] == Color::yellow){
+                    if(i == 0) return -1; //all rows filled
+                    return i -1; 
+                }
+            }    
         }
         //display board
         void print(){
@@ -42,27 +45,24 @@ class Board{
                 cout << '\n';
             }
         }
-        void dropPiece(int column, Player player){
+        void dropPiece(int column, Player &player){
+            column--; 
+            int rowValue = cellToChange(column); 
             if(player == Player::red){
-                column--;
-                //determine which cell coordinate to change if any 
-                int rowValue = cellToChange(column); 
-                //not a valid move
+                //not a valid move1
                 if(rowValue == -1){
-                    //player must be prompted to go again
+                    playerMustSelectAnotherColumn = true;
+                    return;
                 }
                 board[rowValue][column] = Color::red;
-
                 player = Player::yellow;
             }
             else{
-                column--; 
-                board[cellToChange(column)][column] = Color::yellow;
+                board[rowValue][column] = Color::yellow;
                 player = Player::red;
-            }
-            
+            }   
+            playerMustSelectAnotherColumn = false;       
         }
-
         bool checkWin(){
             return true;
         }
@@ -80,6 +80,7 @@ class Game{
     public:
         Game(){currentPlayer = Player::red;}
         Board board;
+        bool playerMustSelectAnotherColumn = false;
         void askUserInput(){
             cout << '\n'  << "Enter a column (1 - 7) to drop your piece: " << '\n';
             cin >> columnSelection;
@@ -89,17 +90,14 @@ class Game{
                 board.print();
                 askUserInput(); 
                 board.dropPiece(columnSelection, currentPlayer);
+                while(playerMustSelectAnotherColumn){askUserInput(); board.dropPiece(columnSelection, currentPlayer);}
                 //board.checkWin(); 
             }
         }
 };
 
-
 int main(){
     Game game;
-    Board b1;
-
-
     game.playGame();
     return 0;
 }
