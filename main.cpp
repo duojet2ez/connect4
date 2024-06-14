@@ -14,6 +14,7 @@ enum class Color{
 };
 
 bool playerMustSelectAnotherColumn = false; 
+
 class Board{
     private:
         const int row = 6;
@@ -81,10 +82,13 @@ class Game{
     public:
         Game(){currentPlayer = Player::red;}
         Board board;
-        bool playerMustSelectAnotherColumn = false;
         void askUserInput(){
             cout << '\n'  << "Enter a column (1 - 7) to drop your piece: " << '\n';
             cin >> columnSelection;
+            while(columnSelection <= 0 || columnSelection >7){
+                cout << "That's not a valid column. Select again (1 - 7): " << '\n';
+                cin >> columnSelection; 
+            }
         }
         void playGame(){
             while(true){
