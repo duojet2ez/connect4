@@ -58,8 +58,13 @@ class Board{
                 }
                 board[rowValue][column] = Color::red;
                 player = Player::yellow;
+
             }
             else{
+                if(rowValue == -1){
+                    playerMustSelectAnotherColumn = true;
+                    return;
+                }
                 board[rowValue][column] = Color::yellow;
                 player = Player::red;
             }   
@@ -83,6 +88,7 @@ class Game{
         Game(){currentPlayer = Player::red;}
         Board board;
         void askUserInput(){
+            if(playerMustSelectAnotherColumn ==  true){cout << "Column full please select again: "<< '\n'; cin >> columnSelection; return;}
             cout << '\n'  << "Enter a column (1 - 7) to drop your piece: " << '\n';
             cin >> columnSelection;
             while(columnSelection <= 0 || columnSelection >7){
@@ -100,6 +106,7 @@ class Game{
             }
         }
 };
+
 
 int main(){
     Game game;
