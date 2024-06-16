@@ -20,9 +20,11 @@ class Board{
         const int row = 6;
         const int column = 7; 
         vector<vector<Color>> board;
+        int piecesUsed;
     public:
         Board(){
             board = vector<vector<Color>>(row, vector<Color>(column, Color::empty));
+            piecesUsed = 0; 
         }
         //function that returns the row # of the cell to change, return -1 if not valid column full 
         int cellToChange(int column){
@@ -58,7 +60,6 @@ class Board{
                 }
                 board[rowValue][column] = Color::red;
                 player = Player::yellow;
-
             }
             else{
                 if(rowValue == -1){
@@ -68,24 +69,60 @@ class Board{
                 board[rowValue][column] = Color::yellow;
                 player = Player::red;
             }   
-            playerMustSelectAnotherColumn = false;       
+            playerMustSelectAnotherColumn = false;     
+            piecesUsed++;  
         }
-        bool checkWin(){
-            return true;
+        //returns true if win condition met with enum color set for color that wins. If color is empty than no winner
+        bool checkWin(Color &winningColor){
+            //no winner condition 
+            if(piecesUsed == 42){
+                winningColor = Color::empty; 
+                return true; 
+            }
+            //iterate over each piece checking for 4 in a row
+            for(int i = 0; i < row; i++){
+                for(int j = 0; j < column; j++){
+                    //check up if not out of bounds by furthest point
+                    if(row - 3 >= 0){
+                        if(board[row][column] == board[row - 1][column] && board[row][column] == board[row - 2][column] && board[row][column] == board[row - 3][column]){
+                            //set winner 
+                            winningColor = board[row][column]; 
+                            return true;
+                        }
+                    }
+
+                    //check down if not out of bounds by furthest point
+
+                    //check left if not out of bounds by furthest point
+
+                    //check right if not out of bounds by furthest point
+
+                    //check horizontal upLeft if not out of bounds by furthest point
+
+                    //check horizontal up right if not out of bounds by furthest point
+
+                    //check horizontal down left if not out of bounds by furthest point
+
+                    //check horizontal down right if not out of bounds by furthest point
+                }
+            }
+            return false;
         }
 };
 
 
 class Game{
     private:
+    bool endCondition;
         int columnSelection; 
         void initializeGame(){
             cout << "Set up game" << '\n';
 
         }
         Player currentPlayer; //track player turn
+        Color winningColor; 
     public:
-        Game(){currentPlayer = Player::red;}
+        Game(){currentPlayer = Player::red; endCondition = false;}
         Board board;
         void askUserInput(){
             if(playerMustSelectAnotherColumn ==  true){cout << "Column full please select again: "<< '\n'; cin >> columnSelection; return;}
@@ -97,12 +134,24 @@ class Game{
             }
         }
         void playGame(){
-            while(true){
+            while(!endCondition){
                 board.print();
                 askUserInput(); 
                 board.dropPiece(columnSelection, currentPlayer);
                 while(playerMustSelectAnotherColumn){askUserInput(); board.dropPiece(columnSelection, currentPlayer);}
-                //board.checkWin(); 
+                if(board.checkWin(winningColor)){
+                    endCondition = true;
+                    //determine who wins 
+                    if(winningColor == Color::empty){
+                        cout << "It is a tie no one wins!" << '\n';
+                    }
+                    else if(winningColor == Color::red){
+                        cout << "Red Wins!" << '\n';
+                    }
+                    else{
+                        cout << "Yellow Wins!" << '\n'; 
+                    }
+                } 
             }
         }
 };
