@@ -82,7 +82,9 @@ class Board{
             //iterate over each piece checking for 4 in a row
             for(int i = 0; i < row; i++){
                 for(int j = 0; j < column; j++){
-                    //check up if not out of bounds by furthest point
+                    //make sure NOT starting on an empty cell 
+                    if(board[i][j] != Color::empty){
+                                            //check up if not out of bounds by furthest point
                     if(i - 3 >= 0){
                         if(board[i][j] == board[i - 1][j] && board[i][j] == board[i - 2][j] && board[i][j] == board[i - 3][j]){
                             //set winner 
@@ -90,7 +92,6 @@ class Board{
                             return true;
                         }
                     }
-
                     //check down if not out of bounds by furthest point
                     if(i + 3 <= 5){
                         if(board[i][j] == board[i + 1][j] && board[i][j] == board[i + 2][j] && board[i][j] == board[i + 3][j]){
@@ -141,6 +142,7 @@ class Board{
                         if(board[i][j] == board[i + 1][j + 1] && board[i][j] == board[i + 2][j + 2] && board[i][j] == board[i + 3][j + 3]){
                             winningColor = board[i][j];
                             return true;
+                            }
                         }
                     }
                 }
