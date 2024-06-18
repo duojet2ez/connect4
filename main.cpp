@@ -83,27 +83,66 @@ class Board{
             for(int i = 0; i < row; i++){
                 for(int j = 0; j < column; j++){
                     //check up if not out of bounds by furthest point
-                    if(row - 3 >= 0){
-                        if(board[row][column] == board[row - 1][column] && board[row][column] == board[row - 2][column] && board[row][column] == board[row - 3][column]){
+                    if(i - 3 >= 0){
+                        if(board[i][j] == board[i - 1][j] && board[i][j] == board[i - 2][j] && board[i][j] == board[i - 3][j]){
                             //set winner 
-                            winningColor = board[row][column]; 
+                            winningColor = board[i][j]; 
                             return true;
                         }
                     }
 
                     //check down if not out of bounds by furthest point
-
+                    if(i + 3 <= 5){
+                        if(board[i][j] == board[i + 1][j] && board[i][j] == board[i + 2][j] && board[i][j] == board[i + 3][j]){
+                            //set winner 
+                            winningColor = board[i][j]; 
+                            return true;
+                        }
+                    }
                     //check left if not out of bounds by furthest point
-
+                    if(j - 3 >=  0){
+                        if(board[i][j] == board[i][j - 1] && board[i][j] == board[i][j - 2] && board[i][j] == board[i][j - 3]){
+                            //set winner 
+                            winningColor = board[i][j]; 
+                            return true;
+                        }
+                    }
                     //check right if not out of bounds by furthest point
-
+                    if(j + 3 <=  6){
+                        if(board[i][j] == board[i][j + 1] && board[i][j] == board[i][j + 2] && board[i][j] == board[i][j + 3]){
+                            //set winner 
+                            winningColor = board[i][j]; 
+                            return true;
+                        }
+                    }
                     //check horizontal upLeft if not out of bounds by furthest point
-
+                    if(i - 3 >= 0 && j - 3 >= 0){
+                        if(board[i][j] == board[i - 1][j - 1] && board[i][j] == board[i - 2][j - 2] && board[i][j] == board[i - 3][j - 3]){
+                            winningColor = board[i][j];
+                            return true;
+                        }
+                    }
                     //check horizontal up right if not out of bounds by furthest point
-
+                    if(i - 3 >= 0 && j + 3 <= 6){
+                        if(board[i][j] == board[i - 1][j + 1] && board[i][j] == board[i - 2][j + 2] && board[i][j] == board[i - 3][j + 3]){
+                            winningColor = board[i][j];
+                            return true;
+                        }
+                    }
                     //check horizontal down left if not out of bounds by furthest point
-
+                    if(i + 3 <= 5 && j - 3 >= 0){
+                        if(board[i][j] == board[i + 1][j - 1] && board[i][j] == board[i + 2][j - 2] && board[i][j] == board[i + 3][j - 3]){
+                            winningColor = board[i][j];
+                            return true;
+                        }
+                    }
                     //check horizontal down right if not out of bounds by furthest point
+                    if(i + 3 <= 5 && j + 3 <= 6){
+                        if(board[i][j] == board[i + 1][j + 1] && board[i][j] == board[i + 2][j + 2] && board[i][j] == board[i + 3][j + 3]){
+                            winningColor = board[i][j];
+                            return true;
+                        }
+                    }
                 }
             }
             return false;
@@ -155,7 +194,6 @@ class Game{
             }
         }
 };
-
 
 int main(){
     Game game;
