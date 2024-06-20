@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<optional> 
 using namespace std;
 
 enum class Player{
@@ -21,23 +22,25 @@ class Board{
         const int column = 7; 
         vector<vector<Color>> board;
         int piecesUsed;
+        //function that returns the row # of the cell to change, and if the column is full returns nullopt
+        //HOW THIS WORKS optional wraps the value returned in an object that tracks if either valid return or not valid return 'nullopt'
+        optional<int> cellToChange(int column){
+            //move row by row down column until hit a filled cell return up 1 row if not out of bounds 
+            for(int i = 0; i < row; i++){
+                if(board[i][column] == Color::red || board[i][column] == Color::yellow){
+                    if(i == 0) return nullopt; //all rows filled
+                    return i -1; 
+                }
+            }
+            //returns bottom row when empty column detected
+            return row - 1;     
+        }
     public:
         Board(){
             board = vector<vector<Color>>(row, vector<Color>(column, Color::empty));
             piecesUsed = 0; 
         }
-        //function that returns the row # of the cell to change, return -1 if not valid column full 
-        int cellToChange(int column){
-            //move row by row down column until hit a filled cell return up 1 row if not out of bounds 
-            for(int i = 0; i < row; i++){
-                if(i == row - 1 && board[i][column] == Color::empty) return i; 
-                if(board[i][column] == Color::red || board[i][column] == Color::yellow){
-                    if(i == 0) return -1; //all rows filled
-                    return i -1; 
-                }
-            }
-            return -1;     
-        }
+
         //display board
         void print(){
             for(int i = 0; i < row; i++){
@@ -51,22 +54,22 @@ class Board{
         }
         void dropPiece(int column, Player &player){
             column--; 
-            int rowValue = cellToChange(column); 
+            optional<int> rowValue = cellToChange(column);  //rowValue is an object that either contains a valid number (row to drop) or not 
             if(player == Player::red){
-                //not a valid move1
-                if(rowValue == -1){
+                //not a valid move
+                if(!rowValue.has_value()){ //has_value returns a bool indicating if the value in object is valid or not 
                     playerMustSelectAnotherColumn = true;
                     return;
                 }
-                board[rowValue][column] = Color::red;
+                board[rowValue.value()][column] = Color::red;
                 player = Player::yellow;
             }
             else{
-                if(rowValue == -1){
+                if(!rowValue.has_value()){
                     playerMustSelectAnotherColumn = true;
                     return;
                 }
-                board[rowValue][column] = Color::yellow;
+                board[rowValue.value()][column] = Color::yellow;
                 player = Player::red;
             }   
             playerMustSelectAnotherColumn = false;     
@@ -150,7 +153,6 @@ class Board{
             return false;
         }
 };
-
 
 class Game{
     private:
