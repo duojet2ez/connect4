@@ -14,8 +14,6 @@ enum class Color{
     empty
 };
 
-bool playerMustSelectAnotherColumn = false; 
-
 class Board{
     private:
         const int row = 6;
@@ -52,28 +50,24 @@ class Board{
                 cout << '\n';
             }
         }
-        void dropPiece(int column, Player &player){
+        bool dropPiece(int column, Player &player){
             column--; 
             optional<int> rowValue = cellToChange(column);  //rowValue is an object that either contains a valid number (row to drop) or not 
             if(player == Player::red){
                 //not a valid move
-                if(!rowValue.has_value()){ //has_value returns a bool indicating if the value in object is valid or not 
-                    playerMustSelectAnotherColumn = true;
-                    return;
-                }
+                if (!rowValue.has_value()) return false;
+                
                 board[rowValue.value()][column] = Color::red;
                 player = Player::yellow;
             }
             else{
-                if(!rowValue.has_value()){
-                    playerMustSelectAnotherColumn = true;
-                    return;
-                }
+                if(!rowValue.has_value()) return false;
+                
                 board[rowValue.value()][column] = Color::yellow;
                 player = Player::red;
             }   
-            playerMustSelectAnotherColumn = false;     
             piecesUsed++;  
+            return true; 
         }
         //returns true if win condition met with enum color set for color that wins. If color is empty than no winner
         bool checkWin(Color &winningColor){
@@ -156,19 +150,14 @@ class Board{
 
 class Game{
     private:
-    bool endCondition;
+        bool endCondition;
         int columnSelection; 
-        void initializeGame(){
-            cout << "Set up game" << '\n';
-
-        }
         Player currentPlayer; //track player turn
         Color winningColor; 
     public:
         Game(){currentPlayer = Player::red; endCondition = false;}
         Board board;
         void askUserInput(){
-            if(playerMustSelectAnotherColumn ==  true){cout << "Column full please select again: "<< '\n'; cin >> columnSelection; return;}
             cout << '\n'  << "Enter a column (1 - 7) to drop your piece: " << '\n';
             cin >> columnSelection;
             while(columnSelection <= 0 || columnSelection >7){
@@ -180,8 +169,7 @@ class Game{
             while(!endCondition){
                 board.print();
                 askUserInput(); 
-                board.dropPiece(columnSelection, currentPlayer);
-                while(playerMustSelectAnotherColumn){askUserInput(); board.dropPiece(columnSelection, currentPlayer);}
+                while(!board.dropPiece(columnSelection, currentPlayer)) askUserInput(); 
                 if(board.checkWin(winningColor)){
                     endCondition = true;
                     //determine who wins 
